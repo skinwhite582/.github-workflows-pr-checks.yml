@@ -228,3 +228,19 @@ resource "aws_apprunner_service" "backend" {
 }
 
 AWS APP runner backend infrastructure 
+Outputs.tf
+output "frontend_cloudfront_url" {
+  description = "CloudFront URL for the static frontend"
+  value       = "https://${aws_cloudfront_distribution.frontend.domain_name}"
+}
+
+output "backend_service_url" {
+  description = "AWS App Runner backend URL"
+infrastructure output 
+  value       = aws_apprunner_service.backend.service_url
+}
+
+output "github_actions_role_arn" {
+  description = "IAM role ARN for GitHub Actions"
+  value       = aws_iam_role.github_actions.arn
+}
