@@ -12,6 +12,8 @@ permissions:
 jobs:
   terraform-checks:
     name: Terraform Validation and Plan
+iam.tf
+https://token.actions.githubusercontent.com
     runs-on: ubuntu-latest
 
     steps:
@@ -85,3 +87,5 @@ variable "app_runner_image_identifier" {
   type        = string
 }
  Terraform input variables
+Add GitHub OIDC provider and 
+IAM role
