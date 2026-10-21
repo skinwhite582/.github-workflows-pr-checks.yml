@@ -301,3 +301,11 @@ The pull request workflow must not give untrusted pull requests AWS credentials 
 
 Terraform deployment should be performed separately from pull request validation, with appropriate access controls and approval.
 Document secure CI Pipeline and OIDC
+
+the IAM permissions required by Terraform.
+
+Ensure the OIDC trust policy and workflow are compatible and secure.
+Configure the GitHub repository variables.
+Check the App Runner ECR access configuration.
+Run Terraform formatting, initialization,validation,and planning.
+Ensure the workflow publishes or uploads the plan output.
