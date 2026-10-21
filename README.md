@@ -55,4 +55,33 @@ provider "aws" {
   region = var.aws_region
 }
 
-Add Terraform version and AWS provider configuration
+Terraform version and AWS provider configuration
+
+variables.tf
+variable "aws_region" {
+  description = "AWS region for the infrastructure"
+  type        = string
+  default     = "eu-west-1"
+}
+
+variable "github_repository" {
+  description = "GitHub repository in owner/repository format"
+  type        = string
+}
+
+variable "github_branch" {
+  description = "Branch permitted to assume the deployment role"
+  type        = string
+  default     = "main"
+}
+
+variable "frontend_bucket_name" {
+  description = "Globally unique S3 bucket name for the frontend"
+  type        = string
+}
+
+variable "app_runner_image_identifier" {
+  description = "Container image URI for the backend"
+  type        = string
+}
+ Terraform input variables
