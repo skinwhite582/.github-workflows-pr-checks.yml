@@ -54,3 +54,5 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+Add Terraform version and AWS provider configuration
