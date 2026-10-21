@@ -12,6 +12,8 @@ permissions:
 jobs:
   terraform-checks:
     name: Terraform Validation and Plan
+backend.tf
+
 iam.tf
 https://token.actions.githubusercontent.com
     runs-on: ubuntu-latest
@@ -184,3 +186,45 @@ resource "aws_s3_bucket_policy" "frontend" {
   ]
 }
 Add secure S3 and CloudFront frontend
+backend.tf
+resource "aws_apprunner_service" "backend" {
+  service_name = "secure-ci-backend"
+
+  source_configuration {
+    auto_deployments_enabled = true
+
+    image_repository {
+      image_identifier      = var.app_runner_image_identifier
+      image_repository_type = "ECR"
+
+      image_configuration {
+        port = "8080"
+
+        runtime_environment_variables = {
+          PORT = "8080"
+        }
+      }
+    }
+  }
+
+  health_check_configuration {
+    protocol            = "HTTP"
+    path                = "/health"
+    interval            = 10
+    timeout             = 5
+    healthy_threshold   = 1
+    unhealthy_threshold = 5
+  }
+
+  instance_configuration {
+    cpu    = "1 vCPU"
+    memory = "2 GB"
+  }
+
+  tags = {
+    Project     = "Secure-CI-Pipeline"
+    Environment = "Development"
+  }
+}
+
+AWS APP runner backend infrastructure 
