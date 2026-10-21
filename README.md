@@ -246,3 +246,58 @@ output "github_actions_role_arn" {
   value       = aws_iam_role.github_actions.arn
 }
 outputs.tf.
+
+## Secure CI Pipeline with GitHub OIDC
+
+### Project Overview
+
+This project uses Terraform and GitHub Actions to validate infrastructure changes securely. The infrastructure includes a private Amazon S3 bucket with a CloudFront distribution for the frontend and an AWS App Runner service for the backend.
+
+### GitHub OIDC Authentication
+
+GitHub Actions authenticates with AWS using OpenID Connect (OIDC). An AWS IAM OIDC identity provider trusts tokens issued by GitHub Actions.
+
+The IAM role trust policy restricts access to the specified GitHub repository and main branch using the token's subject (`sub`) condition. The role is intended to use least-privilege permissions rather than AdministratorAccess.
+
+No permanent AWS access keys are stored in the GitHub workflow.
+
+### Pull Request Workflow
+
+The workflow is defined in `.github/workflows/pr-checks.yml`.
+
+When a pull request targets the main branch, the workflow runs:
+
+- `terraform fmt -check`
+- `terraform init`
+- `terraform validate`
+- `terraform plan`
+
+The workflow does not run `terraform apply`. This ensures that pull requests can validate and preview infrastructure changes without automatically modifying live infrastructure.
+
+Infrastructure deployment should be handled separately through a controlled workflow, preferably with approval before applying changes.
+
+### Frontend Infrastructure
+
+The frontend uses an Amazon S3 bucket protected by S3 Block Public Access. Amazon CloudFront serves the frontend over HTTPS using Origin Access Control (OAC), restricting direct access to the bucket.
+
+### Backend Infrastructure
+
+The backend uses AWS App Runner to run a container image from Amazon ECR. The service is configured with a health check endpoint and automatic deployment settings.
+
+Application secrets should be supplied through an appropriate managed configuration rather than hardcoded into the container image.
+
+### Stretch Goals
+
+- OIDC authentication instead of long-lived AWS access keys.
+- Least-privilege IAM role design.
+- Private S3 frontend origin using CloudFront OAC.
+- HTTPS through CloudFront.
+- App Runner automatic deployment configuration.
+- Separate planning and deployment workflows.
+
+### Security Notes
+
+The pull request workflow must not give untrusted pull requests AWS credentials capable of modifying infrastructure. AWS permissions should be restricted to the operations required by the pipeline.
+
+Terraform deployment should be performed separately from pull request validation, with appropriate access controls and approval.
+Document secure CI Pipeline and OIDC
