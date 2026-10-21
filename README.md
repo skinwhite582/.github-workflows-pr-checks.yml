@@ -38,3 +38,5 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -input=false -no-color 
+
+versions.tf
